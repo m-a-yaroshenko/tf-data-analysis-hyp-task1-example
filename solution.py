@@ -12,8 +12,11 @@ def solution(x_success: int,
     # Измените код этой функции
     # Это будет вашим решением
     # Не меняйте название функции и её аргументы
+    conv_control = x_success / x_cnt
+    conv_test = y_success / y_cnt
+    diff = conv_test - conv_control
+    se = ((1-conv_test)/y_cnt + (1-conv_control)/x_cnt)**0.5
+    t_stat = diff/se
+    p_value = 2*(1 - stats.t.cdf(abs(t_stat), x_cnt + y_cnt - 2))
     alpha = 0.09
-    u = stats.norm.ppf((1-alpha)/2+0.5)
-    p_x = x_success / x_cnt
-    p_y = y_success / y_cnt
-    return p_y < p_x - u * np.sqrt(p_x * (1 - p_x) / x_cnt)
+    return True if p_value <= alpha else False
